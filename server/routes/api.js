@@ -1,9 +1,8 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const controller = require("../controller/auth.controller");
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.send("server is up and running");
-});
+router.post("/login", controller.postLogin);
+router.post("/register", controller.postRegister);
 
 module.exports = router;

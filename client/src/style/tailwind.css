@@ -2,4 +2,42 @@
 
 @tailwind components;
 
+.lds-dual-ring {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.input-login {
+  @apply my-4 p-4 w-11/12 mx-auto rounded transition-all duration-500  block text-lg bg-gray-300  border border-transparent;
+}
+.input-login:hover {
+  @apply bg-white border-gray-500;
+}
+.input-login:focus {
+  @apply bg-white shadow-outline border-gray-300 outline-none;
+}
+.btn-login {
+  @apply w-3/6 transition-all duration-500 px-4 py-2 mb-4 mx-auto  text-white rounded block  mt-2;
+}
+.btn-login:focus {
+  @apply outline-none shadow-outline;
+}
 @tailwind utilities;

@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import classNames from "classnames";
 import Profile from "../../image/profile.svg";
+import { LoginContext } from "./context";
+
 export default function LoginForm() {
+  const {
+    usernameLoginRef,
+    passwordLoginRef,
+    loginSubmit,
+    isLoading,
+  } = useContext(LoginContext);
+  useEffect(() => {
+    usernameLoginRef.current.focus();
+  }, []);
+  const buttonClass = classNames("btn-login", {
+    "bg-blue-500 hover:bg-blue-400": !isLoading,
+    "bg-gray-500 cursor-not-allowed": isLoading,
+  });
   return (
     <>
       <div>
@@ -11,24 +27,27 @@ export default function LoginForm() {
           className="w-40 h-40 mx-auto my-8 rounded-full"
         />
       </div>
-
-      <input
-        type="text"
-        id="login"
-        className="my-4 p-4 w-11/12 mx-auto rounded transition-all duration-500 block text-lg bg-gray-300 hover:bg-white hover:border-gray-500 border border-transparent focus:outline-none focus:bg-white focus:shadow-outline focus:border-gray-300 "
-        name="login"
-        placeholder="Tài khoản"
-      />
-      <input
-        type="text"
-        id="password"
-        className="my-4 p-4 w-11/12 mx-auto rounded transition-all duration-500 block text-lg bg-gray-300 hover:bg-white hover:border-gray-500 border border-transparent focus:outline-none focus:bg-white focus:shadow-outline focus:border-gray-300 "
-        name="login"
-        placeholder="Mật khẩu"
-      />
-      <button className="w-3/6 transition-all duration-500 px-4 py-2 mb-4 mx-auto bg-blue-500 hover:bg-blue-400 text-white rounded block focus:outline-none focus:shadow-outline">
-        Đăng nhập
-      </button>
+      <form onSubmit={loginSubmit}>
+        <input
+          type="text"
+          className="input-login "
+          name="username"
+          placeholder="Tài khoản"
+          autoComplete="off"
+          ref={usernameLoginRef}
+          maxLength={45}
+        />
+        <input
+          type="password"
+          className="input-login"
+          name="password"
+          placeholder="Mật khẩu"
+          autoComplete="off"
+          ref={passwordLoginRef}
+          maxLength={45}
+        />
+        <button className={buttonClass}>Đăng nhập</button>
+      </form>
     </>
   );
 }
