@@ -1,13 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import classNames from "classnames";
 import Background from "../../image/purple-night-wallpaper.jpg";
 import LoginForm from "./loginForm";
 import RegisterForm from "./registerForm";
-import { loginForm, registerForm } from "../../action";
-
-import { useSelector, useDispatch } from "react-redux";
-import { LoginProvider } from "./context";
+import { LoginContext, LoginProvider } from "./context";
 
 const FormBox = styled.div`
   display: flex;
@@ -17,8 +14,8 @@ const FormBox = styled.div`
   width: 100%;
   min-height: 100%;
   padding: 20px;
-  animation-delay: 0.5s;
-  animation-duration: 2s;
+  animation-delay: 0.25s;
+  animation-duration: 1.5s;
 `;
 const H2Title = styled.h2`
   &:after {
@@ -42,9 +39,8 @@ const DivBody = styled.div`
   height: 100vh;
   position: relative;
 `;
-export default function Login() {
-  const isLoginForm = useSelector((state) => state.loginFormReducer);
-  const dispatch = useDispatch();
+function Login() {
+  const { isLoginForm, setIsLoginForm } = useContext(LoginContext);
   const signInClass = classNames(
     "inline-block px-4 py-1 cursor-pointer uppercase font-semibold rounded",
     { "bg-gray-300": isLoginForm, "text-gray-500": !isLoginForm }
@@ -54,33 +50,39 @@ export default function Login() {
     { "bg-gray-300": !isLoginForm, "text-gray-500": isLoginForm }
   );
   return (
-    <LoginProvider>
-      <DivBody className="bg-scroll bg-no-repeat bg-center bg-cover">
-        <FormBox className="fadeInDown">
-          <div
-            className="bg-gray-100 rounded-lg p-8 text-center shadow-md p-0"
-            style={{ width: "450px" }}
-          >
-            <div>
-              <H2Title
-                onClick={() => dispatch(loginForm())}
-                className={signInClass}
-              >
-                ĐĂNG NHẬP
-              </H2Title>
-              <H2Title
-                onClick={() => dispatch(registerForm())}
-                className={signUpClass}
-              >
-                ĐĂNG KÍ
-              </H2Title>
-            </div>
-            {isLoginForm ? <LoginForm /> : <RegisterForm />}
-
-            <div className="bg-gray-100 border-gray-500 border-t p-6 w-full"></div>
+    <DivBody className="bg-scroll bg-no-repeat bg-center bg-cover">
+      <FormBox className="fadeInDown">
+        <div
+          className="bg-gray-100 rounded-lg p-8 text-center shadow-md p-0"
+          style={{ width: "450px" }}
+        >
+          <div>
+            <H2Title
+              onClick={() => setIsLoginForm(true)}
+              className={signInClass}
+            >
+              ĐĂNG NHẬP
+            </H2Title>
+            <H2Title
+              onClick={() => setIsLoginForm(false)}
+              className={signUpClass}
+            >
+              ĐĂNG KÍ
+            </H2Title>
           </div>
-        </FormBox>
-      </DivBody>
+          {isLoginForm ? <LoginForm /> : <RegisterForm />}
+
+          <div className="bg-gray-100 border-gray-500 border-t p-6 w-full"></div>
+        </div>
+      </FormBox>
+    </DivBody>
+  );
+}
+
+export default function Provider() {
+  return (
+    <LoginProvider>
+      <Login />
     </LoginProvider>
   );
 }

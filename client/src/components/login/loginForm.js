@@ -12,14 +12,15 @@ export default function LoginForm() {
   } = useContext(LoginContext);
   useEffect(() => {
     usernameLoginRef.current.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const buttonClass = classNames("btn-login", {
+  const buttonClass = classNames("btn-login fadeIn animated", {
     "bg-blue-500 hover:bg-blue-400": !isLoading,
     "bg-gray-500 cursor-not-allowed": isLoading,
   });
   return (
     <>
-      <div>
+      <div className="fadeIn animated">
         <img
           src={Profile}
           id="icon"
@@ -30,7 +31,7 @@ export default function LoginForm() {
       <form onSubmit={loginSubmit}>
         <input
           type="text"
-          className="input-login "
+          className="input-login fadeIn animated "
           name="username"
           placeholder="Tài khoản"
           autoComplete="off"
@@ -39,14 +40,19 @@ export default function LoginForm() {
         />
         <input
           type="password"
-          className="input-login"
+          className="input-login fadeIn animated"
           name="password"
           placeholder="Mật khẩu"
           autoComplete="off"
           ref={passwordLoginRef}
           maxLength={45}
         />
-        <button className={buttonClass}>Đăng nhập</button>
+        <button className={buttonClass} disabled={isLoading}>
+          <span className="flex justify-center items-center content-center">
+            {isLoading && <div className="lds-dual-ring"></div>}
+            Đăng Nhập
+          </span>
+        </button>
       </form>
     </>
   );

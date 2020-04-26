@@ -18,13 +18,7 @@ module.exports.postLogin = async function (req, res) {
     { expiresIn: 1000 * 60 * 60 * 24 },
     (err, token) => {
       if (err) return res.status(400).json({ message: "Lỗi server" });
-      res
-        .cookie("xauthtoken", token, {
-          maxAge: 1000 * 60 * 60 * 24,
-          httpOnly: true,
-        })
-        .status(200)
-        .json({ id: user.id, username: user.username, token });
+      res.status(200).json({ token });
     }
   );
 };
@@ -42,5 +36,12 @@ module.exports.postRegister = async function (req, res) {
         .then(res.status(200).json("REGISTER_SUCCESS"))
         .catch((e) => res.status(500).json({ message: "Lỗi server" }));
     });
+  });
+};
+module.exports.postIsLogin = function (req, res) {
+  const { tokenAuth } = req.body;
+  jwt.verify(tokenAuth, process.env.JWTSECRET, (err, decoded) => {
+    if (err) return res.status(400).json({ message: "Token expired" });
+    return res.status(200).json(decoded);
   });
 };

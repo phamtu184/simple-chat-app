@@ -4,13 +4,10 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const socketio = require("socket.io");
-const http = require("http");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
 
 const apiRouter = require("./routes/api");
 // connect mongodb
@@ -27,13 +24,6 @@ const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("Mongoose success connect");
 });
-// connect socketio
-io.on("connection", (socket) => {
-  socket.emit("news", { hello: "world" });
-  socket.on("my other event", (data) => {
-    console.log(data);
-  });
-});
 
 app.use(cors());
 app.use(logger("dev"));
@@ -43,5 +33,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", apiRouter);
+
+// connect socketio
+var io = socketio();
+app.io = io;
+require("./config/soketio")(io);
 
 module.exports = app;
