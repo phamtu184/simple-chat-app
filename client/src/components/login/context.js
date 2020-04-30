@@ -3,6 +3,7 @@ import axios from "axios";
 import url from "../../config/url";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+import GetColor from "../../config/randomColor";
 
 export const LoginContext = createContext();
 
@@ -33,9 +34,10 @@ export function LoginProvider(props) {
     e.preventDefault();
     setLoading(true);
     const info = {
-      username: usernameRef.current.value.toLowerCase(),
-      password: passwordRef.current.value.toLowerCase(),
-      passwordCf: passwordCfRef.current.value.toLowerCase(),
+      username: usernameRef.current.value.toLowerCase().trim(),
+      //.replace(/\s/g, ""),
+      password: passwordRef.current.value,
+      passwordCf: passwordCfRef.current.value,
     };
     if (!info.username || !info.password || !info.passwordCf) {
       toast.error("Vui lòng điền đầy đủ các trường!");
@@ -45,11 +47,14 @@ export function LoginProvider(props) {
       toast.error("Tên đăng nhập phải ít nhất 3 kí tự!");
     } else if (info.password.length < 3) {
       toast.error("Mật khẩu phải ít nhất 3 kí tự!");
+    } else if (info.password.length > 40 || info.username.length > 20) {
+      toast.error("Tài khoản hoặc mật khẩu quá dài!");
     } else {
       axios
         .post(`${url.LOCAL}/api/register`, {
           username: info.username,
           password: info.password,
+          color: GetColor(),
         })
         .then((res) => {
           toast.dismiss();
@@ -103,7 +108,7 @@ export function LoginProvider(props) {
       value={{
         isLoginForm,
         setIsLoginForm,
-        //
+        // register
         usernameRef,
         passwordRef,
         passwordCfRef,

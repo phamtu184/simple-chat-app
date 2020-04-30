@@ -20,7 +20,7 @@ export default function UserList() {
               to={`${url}/${item._id}`}
               className="flex rounded-lg w-full items-center"
             >
-              <TagUser name={item.username} />
+              <TagUser name={item.username} color={item.color} />
             </NavLink>
           </div>
         ))}

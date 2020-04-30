@@ -1,11 +1,14 @@
 import React from "react";
 
 export default function TagUser(props) {
-  const { name, text, time } = props;
+  const { name, text, time, color } = props;
   return (
     <>
       <div className="p-2 mr-2">
-        <div className="rounded-full bg-yellow-600 h-12 w-12 relative">
+        <div
+          className="rounded-full h-12 w-12 relative"
+          style={{ backgroundColor: color }}
+        >
           <span
             className="absolute uppercase"
             style={{

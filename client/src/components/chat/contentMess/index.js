@@ -7,6 +7,7 @@ import axios from "axios";
 import url from "../../../config/url";
 import ChatBox from "./chatBox";
 import { ChatContext } from "../context";
+import { useHistory } from "react-router-dom";
 
 let socket = io("/", {
   reconnection: true,
@@ -18,7 +19,9 @@ export default function ContentMess() {
   let { id } = useParams();
   const messageInput = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [friendInfo, setFriendInfo] = useState("");
   const { myInfo } = useContext(ChatContext);
+  const history = useHistory();
   const myId = myInfo.id;
   useEffect(() => {
     socket.on("receiveMessage", ({ message }) => {
@@ -27,7 +30,18 @@ export default function ContentMess() {
   }, []);
   useEffect(() => {
     socket.emit("join", { id1: myId, id2: id });
-    getMessage();
+    axios
+      .post(`${url.LOCAL}/api/user`, { id })
+      .then((res) => {
+        if (res.data) {
+          getMessage();
+          setFriendInfo(res.data);
+        } else {
+          history.push("/chat");
+        }
+      })
+      .catch((e) => history.push("/chat"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myId, id]);
 
   const getMessage = () => {
@@ -60,7 +74,7 @@ export default function ContentMess() {
   };
   return (
     <div className="w-3/4 h-full ">
-      <TopTitle name="sss" />
+      <TopTitle name={friendInfo.username} color={friendInfo.color} />
       <ChatBox messages={messages} myname={myInfo.username} />
       <InputText messageInput={messageInput} sendMessage={sendMessage} />
     </div>

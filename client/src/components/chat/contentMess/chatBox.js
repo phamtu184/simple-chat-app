@@ -4,7 +4,7 @@ import Message from "./message";
 
 export default function ChatBox({ messages, myname }) {
   return (
-    <ScrollToBottom className='className="overflow-auto"'>
+    <ScrollToBottom className="overflow-auto mt-2">
       {messages.map((item, index) => (
         <div key={index}>
           <Message message={item} myname={myname} />
