@@ -33,9 +33,9 @@ export function LoginProvider(props) {
     e.preventDefault();
     setLoading(true);
     const info = {
-      username: usernameRef.current.value,
-      password: passwordRef.current.value,
-      passwordCf: passwordCfRef.current.value,
+      username: usernameRef.current.value.toLowerCase(),
+      password: passwordRef.current.value.toLowerCase(),
+      passwordCf: passwordCfRef.current.value.toLowerCase(),
     };
     if (!info.username || !info.password || !info.passwordCf) {
       toast.error("Vui lòng điền đầy đủ các trường!");

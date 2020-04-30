@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import LogOutSvg from "../../../image/logout.svg";
-import { UserListContext } from "./context";
+import { ChatContext } from "../context";
 
 export default function Title() {
-  const { logoutHandle } = useContext(UserListContext);
+  const { logoutHandle } = useContext(ChatContext);
   return (
-    <div className="h-20 flex items-center p-4 shadow-sm">
+    <div className="h-20 flex items-center p-4 shadow">
       <h2 className="text-2xl font-bold">Chat</h2>
       <button
         onClick={logoutHandle}

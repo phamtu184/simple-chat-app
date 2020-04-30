@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const controllerAuth = require("../controller/auth.controller");
-const controllerUser = require("../controller/user.controller");
+const authController = require("../controller/auth.controller");
+const userController = require("../controller/user.controller");
+const chatController = require("../controller/chat.controller");
 
-router.post("/login", controllerAuth.postLogin);
-router.post("/register", controllerAuth.postRegister);
-router.post("/islogin", controllerAuth.postIsLogin);
+router.post("/login", authController.postLogin);
+router.post("/register", authController.postRegister);
+router.post("/islogin", authController.postIsLogin);
 
-router.get("/users", controllerUser.getUsers);
+router.get("/users", userController.getUsers);
+
+router.post("/getchat", chatController.getChat);
+router.post("/sendchat", chatController.postSendChat);
 
 module.exports = router;

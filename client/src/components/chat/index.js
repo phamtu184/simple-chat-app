@@ -1,29 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, Switch, Route, useRouteMatch } from "react-router-dom";
-import axios from "axios";
-import url from "../../config/url";
+import React from "react";
+import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import UserList from "./userList";
 import ContentMess from "./contentMess";
+import { ChatProvider } from "./context";
 
-export default function Chat() {
-  const history = useHistory();
+function Chat() {
   let { path } = useRouteMatch();
-  const [myId, setMyId] = useState("");
-  const tokenAuth = localStorage.getItem("token-auth");
-  useEffect(() => {
-    if (!tokenAuth) {
-      history.push("/");
-    } else {
-      axios
-        .post(`${url.LOCAL}/api/isLogin`, { tokenAuth })
-        .then((res) => {
-          setMyId(res.data.id);
-        })
-        .catch((e) => history.push("/"));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className="flex flex-row border-t shadow-lg border-gray-400 h-screen">
       <UserList />
@@ -32,9 +14,18 @@ export default function Chat() {
           <h3>Please select a topic.</h3>
         </Route>
         <Route path={`${path}/:id`}>
-          <ContentMess myId={myId} />
+          <ContentMess />
         </Route>
+        <Redirect to="/" />
       </Switch>
     </div>
+  );
+}
+
+export default function Provider() {
+  return (
+    <ChatProvider>
+      <Chat />
+    </ChatProvider>
   );
 }

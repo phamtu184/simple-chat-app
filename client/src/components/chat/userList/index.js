@@ -3,10 +3,10 @@ import { NavLink, useRouteMatch } from "react-router-dom";
 import Title from "./title";
 import InputSearch from "./inputSearch";
 import TagUser from "./tagUser";
-import { UserListContext, UserListProvider } from "./context";
+import { ChatContext } from "../context";
 
-function UserList() {
-  const { users } = useContext(UserListContext);
+export default function UserList() {
+  const { users } = useContext(ChatContext);
   let { url } = useRouteMatch();
   return (
     <div className="w-1/4 h-full border-r border-gray-300 ">
@@ -26,13 +26,5 @@ function UserList() {
         ))}
       </div>
     </div>
-  );
-}
-
-export default function Provider() {
-  return (
-    <UserListProvider>
-      <UserList />
-    </UserListProvider>
   );
 }
