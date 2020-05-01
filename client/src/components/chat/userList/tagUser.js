@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function TagUser(props) {
-  const { name, text, time, color } = props;
+  const { name, text, time, color, isOnline } = props;
   return (
     <>
       <div className="p-2 mr-2">
@@ -19,6 +19,11 @@ export default function TagUser(props) {
           >
             {name.slice(0, 3) || "test"}
           </span>
+          {isOnline ? (
+            <span className="bg-green-400 w-3 h-3 rounded-full absolute right-0 bottom-0"></span>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       <div className=" truncate md:block hidden">

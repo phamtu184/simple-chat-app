@@ -11,6 +11,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  color: {
+    type: String,
+    required: true,
+  },
   dateAdded: {
     type: Date,
     default: Date.now,

@@ -13,14 +13,18 @@ export default function UserList() {
       <Title />
       <div className="overflow-auto">
         <InputSearch />
-        {users.map((item, index) => (
+        {users.map((user, index) => (
           <div className="px-4 mb-1" key={index}>
             <NavLink
               activeClassName="bg-gray-200 "
-              to={`${url}/${item._id}`}
+              to={`${url}/${user._id}`}
               className="flex rounded-lg w-full items-center"
             >
-              <TagUser name={item.username} color={item.color} />
+              <TagUser
+                name={user.username}
+                color={user.color}
+                isOnline={user.isOnline}
+              />
             </NavLink>
           </div>
         ))}

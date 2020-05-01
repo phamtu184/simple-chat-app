@@ -9,6 +9,7 @@ router.post("/register", authController.postRegister);
 router.post("/islogin", authController.postIsLogin);
 
 router.get("/users", userController.getUsers);
+router.post("/user", userController.findUser);
 
 router.post("/getchat", chatController.getChat);
 router.post("/sendchat", chatController.postSendChat);

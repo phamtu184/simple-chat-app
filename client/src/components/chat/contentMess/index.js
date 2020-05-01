@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import io from "socket.io-client";
 import TopTitle from "./topTitle";
 import InputText from "./inputText";
 import axios from "axios";
@@ -8,17 +7,13 @@ import url from "../../../config/url";
 import ChatBox from "./chatBox";
 import { ChatContext } from "../context";
 import { useHistory } from "react-router-dom";
+import socket from "../../../config/socket";
 
-let socket = io("/", {
-  reconnection: true,
-  reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000,
-  reconnectionAttempts: Infinity,
-});
 export default function ContentMess() {
   let { id } = useParams();
   const messageInput = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [roomId, setRoomId] = useState([]);
   const [friendInfo, setFriendInfo] = useState("");
   const { myInfo } = useContext(ChatContext);
   const history = useHistory();
@@ -29,7 +24,6 @@ export default function ContentMess() {
     });
   }, []);
   useEffect(() => {
-    socket.emit("join", { id1: myId, id2: id });
     axios
       .post(`${url.LOCAL}/api/user`, { id })
       .then((res) => {
@@ -45,36 +39,34 @@ export default function ContentMess() {
   }, [myId, id]);
 
   const getMessage = () => {
-    axios
-      .post(`${url.LOCAL}/api/getchat`, { id1: myId, id2: id })
-      .then((res) => {
-        setMessages(res.data.messages);
-      });
+    axios.post(`${url.LOCAL}/api/getchat`, { myId, frId: id }).then((res) => {
+      setMessages(res.data.messages);
+      socket.emit("join", res.data._id);
+      setRoomId(res.data._id);
+    });
   };
   const sendMessage = () => {
     const messValue = messageInput.current.value;
     messageInput.current.value = "";
-    socket.emit("sendMessage", {
-      content: messValue,
-      id1: myId,
-      id2: id,
-      ofUser: myInfo.username,
-    });
     if (messValue) {
+      socket.emit("sendMessage", {
+        content: messValue,
+        roomId,
+        ofUser: myInfo.username,
+      });
       axios
         .post(`${url.LOCAL}/api/sendchat`, {
-          id1: myId,
-          id2: id,
+          roomId,
           messValue,
           username: myInfo.username,
         })
-        .then((res) => console.log(res.data))
+        .then()
         .catch((e) => console.log(e));
     }
   };
   return (
-    <div className="w-3/4 h-full ">
-      <TopTitle name={friendInfo.username} color={friendInfo.color} />
+    <div className="w-3/4 flex-grow flex-shrink flex flex-col">
+      <TopTitle friendInfo={friendInfo} />
       <ChatBox messages={messages} myname={myInfo.username} />
       <InputText messageInput={messageInput} sendMessage={sendMessage} />
     </div>

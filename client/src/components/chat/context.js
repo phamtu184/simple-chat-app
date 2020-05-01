@@ -2,6 +2,7 @@ import React, { useState, createContext, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import url from "../../config/url";
+import socket from "../../config/socket";
 
 export const ChatContext = createContext();
 
@@ -18,6 +19,7 @@ export function ChatProvider(props) {
       axios
         .post(`${url.LOCAL}/api/isLogin`, { tokenAuth })
         .then((res) => {
+          socket.emit("userLogin", res.data.id);
           setMyInfo(res.data);
         })
         .catch((e) => history.push("/"));
@@ -26,6 +28,7 @@ export function ChatProvider(props) {
   }, []);
   const logoutHandle = () => {
     localStorage.removeItem("token-auth");
+    socket.emit("userLogout", myInfo.id);
     history.push("/");
   };
   return (

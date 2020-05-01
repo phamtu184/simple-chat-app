@@ -4,7 +4,7 @@ import Message from "./message";
 
 export default function ChatBox({ messages, myname }) {
   return (
-    <ScrollToBottom className="overflow-auto mt-2">
+    <ScrollToBottom className="bg-white flex-grow flex flex-col overflow-y-auto">
       {messages.map((item, index) => (
         <div key={index}>
           <Message message={item} myname={myname} />
