@@ -7,12 +7,14 @@ import socket from "../../config/socket";
 export const ChatContext = createContext();
 
 export function ChatProvider(props) {
-  const [users, setUsers] = useState([]);
+  const [chatList, setChatList] = useState([]);
   const [myInfo, setMyInfo] = useState("");
+  const [isSearch, setSearch] = useState(false);
+  const [inputSearch, setInputSearch] = useState("");
+  const [usersSearch, setUsersSearch] = useState([]);
   const tokenAuth = localStorage.getItem("token-auth");
   const history = useHistory();
   useEffect(() => {
-    axios.get(`${url.LOCAL}/api/users`).then((res) => setUsers(res.data));
     if (!tokenAuth) {
       history.push("/");
     } else {
@@ -20,12 +22,30 @@ export function ChatProvider(props) {
         .post(`${url.LOCAL}/api/isLogin`, { tokenAuth })
         .then((res) => {
           socket.emit("userLogin", res.data.id);
+          axios
+            .post(`${url.LOCAL}/api/chatlist`, { userid: res.data.id })
+            .then((res) => setChatList(res.data));
           setMyInfo(res.data);
         })
         .catch((e) => history.push("/"));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleChangeSearch = (e) => {
+    setInputSearch(e.target.value);
+  };
+  const searchUsers = () => {
+    if (inputSearch.length > 0) {
+      setSearch(true);
+      axios
+        .post(`${url.LOCAL}/api/users`, { text: inputSearch })
+        .then((res) => {
+          setUsersSearch(res.data);
+        });
+    } else {
+      setSearch(false);
+    }
+  };
   const logoutHandle = () => {
     localStorage.removeItem("token-auth");
     socket.emit("userLogout", myInfo.id);
@@ -34,9 +54,14 @@ export function ChatProvider(props) {
   return (
     <ChatContext.Provider
       value={{
-        users,
+        chatList,
         logoutHandle,
         myInfo,
+        isSearch,
+        handleChangeSearch,
+        inputSearch,
+        usersSearch,
+        searchUsers,
       }}
     >
       {props.children}

@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function TagUser(props) {
-  const { name, text, time, color, isOnline } = props;
+  const { name, lastSender, lastMessage, time, color } = props;
   return (
     <>
       <div className="p-2 mr-2">
@@ -19,18 +19,15 @@ export default function TagUser(props) {
           >
             {name.slice(0, 3) || "test"}
           </span>
-          {isOnline ? (
-            <span className="bg-green-400 w-3 h-3 rounded-full absolute right-0 bottom-0"></span>
-          ) : (
-            ""
-          )}
         </div>
       </div>
-      <div className=" truncate md:block hidden">
+      <div className="truncate md:block hidden">
         <h2>{name || "test"}</h2>
         <div className="flex">
-          <p className="text-sm text-gray-600 -mt-1 ">{text || "text test"}</p>
-          <p className="text-sm text-gray-600 ml-4 -mt-1">{time || "6h"}</p>
+          <p className="text-sm text-gray-600 -mt-1">
+            {lastSender ? `${lastSender}: ${lastMessage}` : ""}
+          </p>
+          <p className="text-sm text-gray-600 ml-4 -mt-1">{time ? time : ""}</p>
         </div>
       </div>
     </>

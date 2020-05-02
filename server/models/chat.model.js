@@ -10,6 +10,22 @@ const ChatSchema = new Schema({
     type: Schema.Types.ObjectId,
     require: true,
   },
+  username1: {
+    type: String,
+    default: "",
+  },
+  username2: {
+    type: String,
+    default: "",
+  },
+  color1: {
+    type: String,
+    default: "",
+  },
+  color2: {
+    type: String,
+    default: "",
+  },
   messages: [
     {
       content: String,

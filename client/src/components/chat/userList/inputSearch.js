@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import SearchIcon from "../../../image/search-solid.svg";
+import { ChatContext } from "../context";
 
 const InputContainer = styled.div`
   position: relative;
@@ -12,7 +13,10 @@ const InputContainer = styled.div`
     height: 20px;
   }
 `;
-export default function InputSearch(props) {
+export default function InputSearch() {
+  const { handleChangeSearch, inputSearch, searchUsers } = useContext(
+    ChatContext
+  );
   return (
     <div className="p-2 ">
       <InputContainer>
@@ -22,6 +26,9 @@ export default function InputSearch(props) {
           duration-500  block text-sm bg-gray-200 border border-transparent 
           focus:bg-white focus:shadow-outline focus:border-gray-300 focus:outline-none md:pl-10 pl-6"
           placeholder="Tìm kiếm"
+          onChange={handleChangeSearch}
+          value={inputSearch}
+          onBlur={searchUsers}
         />
       </InputContainer>
     </div>
