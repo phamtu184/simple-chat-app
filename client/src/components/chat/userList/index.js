@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { NavLink, useRouteMatch } from "react-router-dom";
+import { ChatContext } from "../context";
 import Title from "./title";
 import InputSearch from "./inputSearch";
 import TagUser from "./tagUser";
-import { ChatContext } from "../context";
 
 export default function UserList() {
   const { chatList, usersSearch, isSearch, myInfo } = useContext(ChatContext);

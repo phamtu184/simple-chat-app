@@ -51,5 +51,8 @@ module.exports = (io) => {
         thisRoomId: roomId,
       });
     });
+    socket.on("typing", ({ value, roomId }) => {
+      socket.to(roomId).emit("typing", { value, currentRoom: roomId });
+    });
   });
 };

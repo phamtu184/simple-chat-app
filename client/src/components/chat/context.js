@@ -8,6 +8,7 @@ export const ChatContext = createContext();
 
 export function ChatProvider(props) {
   const [chatList, setChatList] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [myInfo, setMyInfo] = useState("");
   const [isSearch, setSearch] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
@@ -22,12 +23,22 @@ export function ChatProvider(props) {
         .post(`${url.LOCAL}/api/isLogin`, { tokenAuth })
         .then((res) => {
           socket.emit("userLogin", res.data.id);
+          setMyInfo(res.data);
           axios
             .post(`${url.LOCAL}/api/chatlist`, { userid: res.data.id })
-            .then((res) => {
-              setChatList(res.data);
+            .then((ress) => {
+              setChatList(ress.data);
+              socket.on(
+                "receiveMessage",
+                ({ message, newChat, thisRoomId }) => {
+                  if (localStorage.currentRoom === thisRoomId) {
+                    setMessages((messages) => [...messages, message]);
+                  }
+                  const newArr = ress.data.filter((x) => x._id !== thisRoomId);
+                  setChatList([newChat, ...newArr]);
+                }
+              );
             });
-          setMyInfo(res.data);
         })
         .catch((e) => history.push("/"));
     }
@@ -58,6 +69,8 @@ export function ChatProvider(props) {
       value={{
         chatList,
         setChatList,
+        messages,
+        setMessages,
         logoutHandle,
         myInfo,
         isSearch,
