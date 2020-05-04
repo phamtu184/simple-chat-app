@@ -17,7 +17,7 @@ export default function TagUser(props) {
               transform: "translate(-50%,-50%)",
             }}
           >
-            {name.slice(0, 3) || "test"}
+            {name ? name.slice(0, 3) : "test"}
           </span>
         </div>
       </div>

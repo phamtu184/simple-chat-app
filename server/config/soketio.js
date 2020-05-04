@@ -43,9 +43,13 @@ module.exports = (io) => {
       }
       socket.disconnect();
     });
-    socket.on("sendMessage", ({ content, roomId, ofUser }) => {
+    socket.on("sendMessage", ({ content, roomId, ofUser, newChat }) => {
       const message = { content, ofUser };
-      io.to(roomId).emit("receiveMessage", { message });
+      io.to(roomId).emit("receiveMessage", {
+        message,
+        newChat,
+        thisRoomId: roomId,
+      });
     });
   });
 };

@@ -15,14 +15,10 @@ export default function ContentMess() {
   const [messages, setMessages] = useState([]);
   const [roomId, setRoomId] = useState([]);
   const [friendInfo, setFriendInfo] = useState("");
-  const { myInfo } = useContext(ChatContext);
+  const { myInfo, chatList, setChatList } = useContext(ChatContext);
   const history = useHistory();
   const myId = myInfo.id;
-  useEffect(() => {
-    socket.on("receiveMessage", ({ message }) => {
-      setMessages((messages) => [...messages, message]);
-    });
-  }, []);
+
   useEffect(() => {
     axios
       .post(`${url.LOCAL}/api/user`, { id })
@@ -37,7 +33,13 @@ export default function ContentMess() {
       .catch((e) => history.push("/chat"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myId, id]);
-
+  useEffect(() => {
+    socket.on("receiveMessage", ({ message, newChat, thisRoomId }) => {
+      setMessages((messages) => [...messages, message]);
+      const newArr = chatList.filter((x) => x._id !== thisRoomId);
+      setChatList([newChat, ...newArr]);
+    });
+  }, []);
   const getMessage = () => {
     axios.post(`${url.LOCAL}/api/getchat`, { myId, frId: id }).then((res) => {
       setMessages(res.data.messages);
@@ -49,18 +51,20 @@ export default function ContentMess() {
     const messValue = messageInput.current.value;
     messageInput.current.value = "";
     if (messValue) {
-      socket.emit("sendMessage", {
-        content: messValue,
-        roomId,
-        ofUser: myInfo.username,
-      });
       axios
         .post(`${url.LOCAL}/api/sendchat`, {
           roomId,
           messValue,
           username: myInfo.username,
         })
-        .then()
+        .then((res) => {
+          socket.emit("sendMessage", {
+            content: messValue,
+            roomId,
+            newChat: res.data.chat,
+            ofUser: myInfo.username,
+          });
+        })
         .catch((e) => console.log(e));
     }
   };

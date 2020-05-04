@@ -24,7 +24,9 @@ export function ChatProvider(props) {
           socket.emit("userLogin", res.data.id);
           axios
             .post(`${url.LOCAL}/api/chatlist`, { userid: res.data.id })
-            .then((res) => setChatList(res.data));
+            .then((res) => {
+              setChatList(res.data);
+            });
           setMyInfo(res.data);
         })
         .catch((e) => history.push("/"));
@@ -55,6 +57,7 @@ export function ChatProvider(props) {
     <ChatContext.Provider
       value={{
         chatList,
+        setChatList,
         logoutHandle,
         myInfo,
         isSearch,

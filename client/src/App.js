@@ -21,7 +21,6 @@ function App() {
       <Switch>
         <Route path="/" exact={true} component={Login} />
         <Route path="/chat" component={Chat} />
-        {/* <Route path="/chat:id" component={Chat} /> */}
         <Redirect to="/" />
       </Switch>
     </Router>

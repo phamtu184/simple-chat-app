@@ -29,6 +29,9 @@ export default function InputSearch() {
           onChange={handleChangeSearch}
           value={inputSearch}
           onBlur={searchUsers}
+          onKeyUp={(e) => {
+            if (e.keyCode === 13) searchUsers();
+          }}
         />
       </InputContainer>
     </div>
