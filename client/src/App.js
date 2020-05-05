@@ -1,7 +1,6 @@
 import React from "react";
-import "./style/style.css";
+import "./style/main.css";
 import "./style/stylecus.css";
-import "./style/animate.css";
 import "react-toastify/dist/ReactToastify.css";
 import {
   BrowserRouter as Router,

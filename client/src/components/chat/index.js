@@ -3,6 +3,7 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import UserList from "./userList";
 import ContentMess from "./contentMess";
 import { ChatProvider } from "./context";
+import ChatSVG from "../../image/chat.svg";
 
 export default function Chat() {
   let { path } = useRouteMatch();
@@ -12,7 +13,12 @@ export default function Chat() {
         <UserList />
         <Switch>
           <Route exact path={path}>
-            <h3>Please select a topic.</h3>
+            <div className="flex flex-col items-center content-center justify-center w-full">
+              <h3 className="uppercase font-semibold text-3xl text-gray-800 ">
+                Simple chat app
+              </h3>
+              <img src={ChatSVG} alt="ChatSVG" className="w-32 h-32" />
+            </div>
           </Route>
           <Route path={`${path}/:id`}>
             <ContentMess />
