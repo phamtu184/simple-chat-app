@@ -13,12 +13,14 @@ export function ChatProvider(props) {
   const [isSearch, setSearch] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
   const [usersSearch, setUsersSearch] = useState([]);
+  const [isLoading, setLoading] = useState(false);
   const tokenAuth = localStorage.getItem("token-auth");
   const history = useHistory();
   useEffect(() => {
     if (!tokenAuth) {
       history.push("/");
     } else {
+      setLoading(true);
       axios
         .post(`${url.LOCAL}/api/isLogin`, { tokenAuth })
         .then((res) => {
@@ -38,6 +40,7 @@ export function ChatProvider(props) {
                   setChatList([newChat, ...newArr]);
                 }
               );
+              setLoading(false);
             });
         })
         .catch((e) => history.push("/"));
@@ -70,6 +73,7 @@ export function ChatProvider(props) {
         chatList,
         setChatList,
         messages,
+        isLoading,
         setMessages,
         logoutHandle,
         myInfo,

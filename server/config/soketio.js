@@ -30,14 +30,13 @@ module.exports = (io) => {
     socket.on("disconnect", () => {
       console.log("user disconnect", users);
       if (users[socket.id]) {
-        io.emit("userLogout", users[socket.id]);
-        delete users[socket.id];
         User.findById(users[socket.id]).exec((err, user) => {
           if (user) {
             console.log("user logout", user.username);
             user.isOnline = false;
             user.onlineFrom = Date.now();
             user.save();
+            delete users[socket.id];
           }
         });
       }
@@ -51,8 +50,8 @@ module.exports = (io) => {
         thisRoomId: roomId,
       });
     });
-    socket.on("typing", ({ value, roomId }) => {
-      socket.to(roomId).emit("typing", { value, currentRoom: roomId });
+    socket.on("typing", ({ typing, roomId }) => {
+      socket.to(roomId).emit("typing", { typing, currentRoom: roomId });
     });
   });
 };

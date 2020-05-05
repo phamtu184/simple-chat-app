@@ -8,6 +8,7 @@ import url from "../../../config/url";
 import ChatBox from "./chatBox";
 import { useHistory } from "react-router-dom";
 import socket from "../../../config/socket";
+import PageLoader from "../../loader/pageLoader";
 
 export default function ContentMess() {
   let { id } = useParams();
@@ -15,10 +16,12 @@ export default function ContentMess() {
   const [roomId, setRoomId] = useState([]);
   const [isTyping, setTyping] = useState(false);
   const [friendInfo, setFriendInfo] = useState({});
+  const [isLoading, setLoading] = useState(false);
   const { myInfo, setMessages, messages } = useContext(ChatContext);
   const history = useHistory();
 
   useEffect(() => {
+    setLoading(true);
     axios
       .post(`${url.LOCAL}/api/user`, { id })
       .then((res) => {
@@ -33,12 +36,13 @@ export default function ContentMess() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myInfo, id]);
   useEffect(() => {
-    socket.on("typing", ({ value, currentRoom }) => {
+    socket.on("typing", ({ typing, currentRoom }) => {
       if (currentRoom === localStorage.currentRoom) {
-        if (value) {
+        if (typing) {
           setTyping(true);
+        } else {
+          setTyping(false);
         }
-        setTimeout(() => setTyping(false), 4000);
       }
     });
   }, []);
@@ -50,6 +54,7 @@ export default function ContentMess() {
         socket.emit("join", res.data._id);
         setRoomId(res.data._id);
         localStorage.currentRoom = res.data._id;
+        setLoading(false);
       });
   };
   const sendMessage = () => {
@@ -73,26 +78,38 @@ export default function ContentMess() {
         .catch((e) => console.log(e));
     }
   };
+  const stopTyping = () => {
+    socket.emit("typing", { typing: false, roomId });
+  };
+  var timeout = undefined;
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       sendMessage();
     } else {
-      socket.emit("typing", { value: messageInput.current.value, roomId });
+      socket.emit("typing", { typing: true, roomId });
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(stopTyping, 3000);
     }
   };
   return (
     <div className="w-3/4 flex-grow flex-shrink flex flex-col">
-      <TopTitle friendInfo={friendInfo} />
-      <ChatBox
-        messages={messages}
-        myname={myInfo.username}
-        isTyping={isTyping}
-      />
-      <InputText
-        messageInput={messageInput}
-        sendMessage={sendMessage}
-        handleKeyPress={handleKeyPress}
-      />
+      {!isLoading ? (
+        <>
+          <TopTitle friendInfo={friendInfo} />
+          <ChatBox
+            messages={messages}
+            myname={myInfo.username}
+            isTyping={isTyping}
+          />
+          <InputText
+            messageInput={messageInput}
+            sendMessage={sendMessage}
+            handleKeyPress={handleKeyPress}
+          />
+        </>
+      ) : (
+        <PageLoader />
+      )}
     </div>
   );
 }

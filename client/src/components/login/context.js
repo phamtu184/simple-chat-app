@@ -41,14 +41,19 @@ export function LoginProvider(props) {
     };
     if (!info.username || !info.password || !info.passwordCf) {
       toast.error("Vui lòng điền đầy đủ các trường!");
+      setLoading(false);
     } else if (info.password !== info.passwordCf) {
       toast.error("Xác nhận mật khẩu không chính xác!");
+      setLoading(false);
     } else if (info.username.length < 3) {
       toast.error("Tên đăng nhập phải ít nhất 3 kí tự!");
+      setLoading(false);
     } else if (info.password.length < 3) {
       toast.error("Mật khẩu phải ít nhất 3 kí tự!");
+      setLoading(false);
     } else if (info.password.length > 40 || info.username.length > 20) {
       toast.error("Tài khoản hoặc mật khẩu quá dài!");
+      setLoading(false);
     } else {
       axios
         .post(`${url.LOCAL}/api/register`, {
@@ -57,6 +62,7 @@ export function LoginProvider(props) {
           color: GetColor(),
         })
         .then((res) => {
+          setLoading(false);
           toast.dismiss();
           setIsLoginForm(true);
           toast.success("Đăng kí thành công");
@@ -65,12 +71,13 @@ export function LoginProvider(props) {
         .catch((e) => {
           if (e.response.data.message) {
             toast.error(e.response.data.message);
+            setLoading(false);
           } else {
             toast.error("Lỗi server!");
+            setLoading(false);
           }
         });
     }
-    setLoading(false);
   };
   const loginSubmit = (e) => {
     e.preventDefault();
@@ -79,6 +86,7 @@ export function LoginProvider(props) {
     const passwordValue = passwordLoginRef.current.value;
     if (!usernameValue || !passwordValue) {
       toast.error("Vui lòng điền đầy đủ các trường!");
+      setLoading(false);
     } else {
       axios
         .post(`${url.LOCAL}/api/login`, {
@@ -91,17 +99,19 @@ export function LoginProvider(props) {
             localStorage.setItem("token-auth", res.data.token);
             history.push("/chat");
             toast.success("Đăng nhập thành công");
+            setLoading(false);
           } else {
             toast.error("Đăng nhập thất bại (lỗi server)");
+            setLoading(false);
           }
         })
         .catch((e) => {
           if (e) {
             toast.error(e.response.data.message);
+            setLoading(false);
           }
         });
     }
-    setLoading(false);
   };
   return (
     <LoginContext.Provider
