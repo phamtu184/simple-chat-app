@@ -20,11 +20,11 @@ export default function InputSearch() {
   return (
     <div className="p-2 ">
       <InputContainer>
-        <img src={SearchIcon} alt="SearchIcon" />
+        <img src={SearchIcon} alt="SearchIcon" className="sm:block hidden" />
         <input
           className="my-2 p-2 w-11/12 mx-auto rounded-full transition-all 
           duration-500  block text-sm bg-gray-200 border border-transparent 
-          focus:bg-white focus:shadow-outline focus:border-gray-300 focus:outline-none md:pl-10 pl-6"
+          focus:bg-white focus:shadow-outline focus:border-gray-300 focus:outline-none sm:pl-10 pl-2"
           placeholder="Tìm kiếm"
           onChange={handleChangeSearch}
           value={inputSearch}

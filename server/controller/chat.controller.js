@@ -45,8 +45,8 @@ module.exports.getChatList = async function (req, res) {
   return res.status(200).json([]);
 };
 module.exports.postSendChat = async function (req, res) {
-  const { roomId, messValue, username } = req.body;
-  if (!roomId || !username || !messValue)
+  const { roomId, messValue, username, color } = req.body;
+  if (!roomId || !username || !messValue || !color)
     return res.status(400).json({ message: "Mất dữ liệu" });
   const chat = await Chat.findById(roomId);
   if (!chat)
@@ -54,6 +54,7 @@ module.exports.postSendChat = async function (req, res) {
   chat.messages.push({
     content: messValue,
     ofUser: username,
+    color: color,
     time: Date.now(),
   });
   chat.lastMessage = messValue;

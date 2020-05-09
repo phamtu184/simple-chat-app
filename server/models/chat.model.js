@@ -30,6 +30,7 @@ const ChatSchema = new Schema({
     {
       content: String,
       ofUser: String,
+      color: String,
       time: {
         type: Date,
         default: Date.now,

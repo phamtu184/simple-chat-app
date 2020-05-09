@@ -42,8 +42,8 @@ module.exports = (io) => {
       }
       socket.disconnect();
     });
-    socket.on("sendMessage", ({ content, roomId, ofUser, newChat }) => {
-      const message = { content, ofUser };
+    socket.on("sendMessage", ({ content, roomId, ofUser, newChat, color }) => {
+      const message = { content, ofUser, color };
       io.to(roomId).emit("receiveMessage", {
         message,
         newChat,

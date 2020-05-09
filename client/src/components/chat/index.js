@@ -13,7 +13,7 @@ export default function Chat() {
         <UserList />
         <Switch>
           <Route exact path={path}>
-            <div className="flex flex-col items-center content-center justify-center w-full">
+            <div className="flex flex-col items-center content-center justify-center w-3/4">
               <h3 className="uppercase font-semibold text-3xl text-gray-800 ">
                 Simple chat app
               </h3>

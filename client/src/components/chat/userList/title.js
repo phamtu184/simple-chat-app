@@ -6,7 +6,7 @@ export default function Title() {
   const { logoutHandle, myInfo } = useContext(ChatContext);
   return (
     <div className="h-20 flex items-center p-4 shadow">
-      <div className="p-2 mr-2">
+      <div className="sm:p-2 sm:mr-2 mr-1">
         <div
           className="rounded-full md:h-12 md:w-12 h-10 w-10 relative"
           style={{ backgroundColor: myInfo.color }}

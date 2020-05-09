@@ -66,6 +66,7 @@ export default function ContentMess() {
           roomId,
           messValue,
           username: myInfo.username,
+          color: myInfo.color,
         })
         .then((res) => {
           socket.emit("sendMessage", {
@@ -73,6 +74,7 @@ export default function ContentMess() {
             roomId,
             newChat: res.data.chat,
             ofUser: myInfo.username,
+            color: myInfo.color,
           });
         })
         .catch((e) => console.log(e));
@@ -85,6 +87,7 @@ export default function ContentMess() {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       sendMessage();
+      stopTyping();
     } else {
       socket.emit("typing", { typing: true, roomId });
       if (timeout) clearTimeout(timeout);
